@@ -58,6 +58,36 @@ func (mg *MongoDB) GetItem(id string) (*Item, error) {
 	return &item, nil
 }
 
+func (mg *MongoDB) GetOnSales() ([]OnSale, error) {
+	onsales := []OnSale{}
+
+	if err := mg.session.DB("").C("onsales").Find(nil).Sort("_id").All(&onsales); err != nil {
+		log.Printf("[ERROR] Retrive on-sales failed: %s", err)
+		return nil, err
+	}
+
+	return onsales, nil
+}
+
+func (mg *MongoDB) GetOnSale(id string) (*OnSale, error) {
+	// Verify id is ObjectId, otherwise bail
+	if !bson.IsObjectIdHex(id) {
+		log.Printf("[ERROR] invalid id %s", id)
+		return nil, errors.New("invalid id")
+	}
+
+	oid := bson.ObjectIdHex(id)
+
+	onsale := OnSale{}
+
+	if err := mg.session.DB("").C("onsales").FindId(oid).One(&onsale); err != nil {
+		log.Printf("[ERROR]  Find %s from mongo failed: %s", id, err)
+		return nil, err
+	}
+
+	return &onsale, nil
+}
+
 // func (mg *MongoDB) GetOrder(id string) (*types.Order, error) {
 // 	if !bson.IsObjectIdHex(id) {
 // 		return nil, errors.New("invalid id")

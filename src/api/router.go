@@ -33,7 +33,7 @@ func (r *Router) initRoutes() {
 		// items
 		v1.GET("/items/:id", r.getItem)
 		v1.GET("/items", r.getItems)
-		v1.GET("/onsale", r.getOnSale)
+		v1.GET("/onsales/:id", r.getOnSale)
 		v1.GET("/onsales", r.getOnSales)
 
 		// orders

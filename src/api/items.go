@@ -29,10 +29,22 @@ func (r *Router) getItem(ctx *gin.Context) {
 	return
 }
 
-func (r *Router) getOnSale(ctx *gin.Context) {
+func (r *Router) getOnSales(ctx *gin.Context) {
+
+	onsales, _ := r.backend.GetOnSales()
+
+	ctx.JSON(http.StatusOK, onsales)
+
 	return
 }
 
-func (r *Router) getOnSales(ctx *gin.Context) {
+func (r *Router) getOnSale(ctx *gin.Context) {
+	onsale, err := r.backend.GetOnSale(ctx.Param("id"))
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, "")
+		return
+	}
+
+	ctx.JSON(http.StatusOK, onsale)
 	return
 }
