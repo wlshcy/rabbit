@@ -140,19 +140,19 @@ func (mg *MongoDB) GetAddresses() ([]Address, error) {
 	return addresses, nil
 }
 
-// func (mg *MongoDB) GetAddresses(id string) (*types.Address, error) {
-// 	if !bson.IsObjectIdHex(id) {
-// 		return nil, errors.New("invalid id")
-// 	}
-//
-// 	address := types.Address{}
-//
-// 	if err := mg.session.DB().C("address").FindId(bson.ObjectIdHex(id)).One(&address); err != nil {
-// 		return nil, err
-// 	}
-//
-// 	return address, nil
-// }
+func (mg *MongoDB) GetAddress(id string) (*Address, error) {
+	if !bson.IsObjectIdHex(id) {
+		return nil, errors.New("invalid id")
+	}
+
+	address := Address{}
+
+	if err := mg.session.DB("").C("addresses").FindId(bson.ObjectIdHex(id)).One(&address); err != nil {
+		return nil, err
+	}
+
+	return &address, nil
+}
 
 func (mg *MongoDB) NewAddress(address *Address) error {
 	address.Id = bson.NewObjectId()

@@ -37,6 +37,18 @@ func (r *Router) newAddress(ctx *gin.Context) {
 	return
 }
 
+func (r *Router) getAddress(ctx *gin.Context) {
+	address, err := r.backend.GetAddress(ctx.Param("id"))
+	if err != nil {
+		log.Printf("[ERROR] Retrieve address %s failed: %s", ctx.Param("id"), err)
+		ctx.JSON(http.StatusNotFound, err.Error())
+		return
+	}
+
+	ctx.JSON(http.StatusOK, address)
+	return
+}
+
 func (r *Router) deleteAddress(ctx *gin.Context) {
 	return
 }

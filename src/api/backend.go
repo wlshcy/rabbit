@@ -10,5 +10,6 @@ type Backend interface {
 	GetOnSale(string) (*db.OnSale, error)
 	GetOnSales() ([]db.OnSale, error)
 	GetAddresses() ([]db.Address, error)
+	GetAddress(string) (*db.Address, error)
 	NewAddress(*db.Address) error
 }
