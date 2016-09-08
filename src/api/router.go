@@ -7,15 +7,18 @@ import (
 )
 
 type Router struct {
-	router *gin.Engine
+	router  *gin.Engine
+	backend Backend
 }
 
 func (r *Router) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	r.router.ServeHTTP(w, req)
 }
 
-func NewRouter() *Router {
-	router := &Router{}
+func NewRouter(b Backend) *Router {
+	router := &Router{
+		backend: b,
+	}
 
 	router.initRoutes()
 
