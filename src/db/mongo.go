@@ -1,7 +1,6 @@
 package db
 
 import (
-	//"encoding/json"
 	"errors"
 	"log"
 
@@ -130,7 +129,18 @@ func (mg *MongoDB) GetOnSale(id string) (*OnSale, error) {
 // 	return json.Marshal(order)
 // }
 //
-// func (mg *MongoDB) GetAddress(id string) (*types.Address, error) {
+func (mg *MongoDB) GetAddresses() ([]Address, error) {
+	addresses := []Address{}
+
+	if err := mg.session.DB("").C("addresses").Find(nil).Sort("_id").All(&addresses); err != nil {
+		log.Printf("[ERROR] Retrive addresses failed: %s", err)
+		return nil, err
+	}
+
+	return addresses, nil
+}
+
+// func (mg *MongoDB) GetAddresses(id string) (*types.Address, error) {
 // 	if !bson.IsObjectIdHex(id) {
 // 		return nil, errors.New("invalid id")
 // 	}
@@ -143,17 +153,12 @@ func (mg *MongoDB) GetOnSale(id string) (*OnSale, error) {
 //
 // 	return address, nil
 // }
-//
-// func (mg *MongoDB) NewAddress(body string) (string, error) {
-// 	address := types.Address{}
-//
-// 	json.Decoder(body).Decode(&address)
-//
-// 	address.Id = bson.NewObjectId()
-//
-// 	if err := mg.session.DB().C("address").Insert(address); err != nil {
-// 		return "", err
-// 	}
-//
-// 	return json.Marshal(address)
-// }
+
+func (mg *MongoDB) NewAddress(address *Address) error {
+	address.Id = bson.NewObjectId()
+
+	if err := mg.session.DB("").C("addresses").Insert(address); err != nil {
+		return err
+	}
+	return nil
+}

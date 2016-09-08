@@ -9,4 +9,6 @@ type Backend interface {
 	GetItems(int, string) ([]db.Item, error)
 	GetOnSale(string) (*db.OnSale, error)
 	GetOnSales() ([]db.OnSale, error)
+	GetAddresses() ([]db.Address, error)
+	NewAddress(*db.Address) error
 }
