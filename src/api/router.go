@@ -31,8 +31,10 @@ func (r *Router) initRoutes() {
 	v1 := router.Group("/v1")
 	{
 		// items
+		v1.GET("/items/:id", r.getItem)
 		v1.GET("/items", r.getItems)
 		v1.GET("/onsale", r.getOnSale)
+		v1.GET("/onsales", r.getOnSales)
 
 		// orders
 		v1.GET("/orders", r.getOrders)

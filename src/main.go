@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/wlshcy/rabbit/src/api"
+	"github.com/wlshcy/rabbit/src/db"
 )
 
 var (
