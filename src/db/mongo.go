@@ -162,3 +162,25 @@ func (mg *MongoDB) NewAddress(address *Address) error {
 	}
 	return nil
 }
+
+func (mg *MongoDB) UpdateAddress(id string, body map[string]interface{}) error {
+	if !bson.IsObjectIdHex(id) {
+		log.Printf("[ERROR] Invalid id %s", id)
+		return errors.New("invalid id")
+	}
+
+	query := bson.M{"_id": bson.ObjectIdHex(id)}
+	change := bson.M{"$set": body}
+	if err := mg.session.DB("").C("addresses").Update(query, change); err != nil {
+		log.Printf("[ERROR] Update address %s failed: %s", id, err)
+		return err
+	}
+	// How to use Apply?
+	// change := mgo.Change{
+	// 	Update:    bson.M{"$set": body},
+	// 	ReturnNew: true,
+	// }
+	// mg.session.DB("").C("addresses").Find(bson.M{"_id": bson.ObjectIdHex(id)}).Apply(change, &address)
+
+	return nil
+}

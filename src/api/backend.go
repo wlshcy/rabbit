@@ -11,5 +11,6 @@ type Backend interface {
 	GetOnSales() ([]db.OnSale, error)
 	GetAddresses() ([]db.Address, error)
 	GetAddress(string) (*db.Address, error)
+	UpdateAddress(string, map[string]interface{}) error
 	NewAddress(*db.Address) error
 }

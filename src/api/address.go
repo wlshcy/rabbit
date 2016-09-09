@@ -1,6 +1,7 @@
 package api
 
 import (
+	//"io/ioutil"
 	"log"
 	"net/http"
 
@@ -54,5 +55,19 @@ func (r *Router) deleteAddress(ctx *gin.Context) {
 }
 
 func (r *Router) updateAddress(ctx *gin.Context) {
+	update := make(map[string]interface{})
+	if err := ctx.BindJSON(&update); err != nil {
+		log.Printf("[ERROR] Bind json failed: %s", err)
+		ctx.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	log.Printf("%s", update)
+	if err := r.backend.UpdateAddress(ctx.Param("id"), update); err != nil {
+		log.Printf("[ERROR] Update address failed: %s", err)
+		ctx.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
 	return
 }

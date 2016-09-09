@@ -45,7 +45,7 @@ func (r *Router) initRoutes() {
 		v1.GET("/addresses/:id", r.getAddress)
 		v1.POST("/addresses", r.newAddress)
 		v1.DELETE("/addresses/:id", r.deleteAddress)
-		v1.PATCH("/addresses/:id", r.updateAddress)
+		v1.POST("/addresses/:id", r.updateAddress)
 	}
 
 	r.router = router
