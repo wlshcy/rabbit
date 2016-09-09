@@ -184,3 +184,17 @@ func (mg *MongoDB) UpdateAddress(id string, body map[string]interface{}) error {
 
 	return nil
 }
+
+func (mg *MongoDB) DeleteAddress(id string) error {
+	if !bson.IsObjectIdHex(id) {
+		log.Printf("[ERROR] Invalid id %s", id)
+		return errors.New("invalid id")
+	}
+
+	if err := mg.session.DB("").C("addresses").Remove(bson.M{"_id": bson.ObjectIdHex(id)}); err != nil {
+		log.Printf("[ERROR] Delete address %s failed: %s", id, err)
+		return err
+	}
+
+	return nil
+}

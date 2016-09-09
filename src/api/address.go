@@ -51,6 +51,11 @@ func (r *Router) getAddress(ctx *gin.Context) {
 }
 
 func (r *Router) deleteAddress(ctx *gin.Context) {
+	if err := r.backend.DeleteAddress(ctx.Param("id")); err != nil {
+		ctx.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
 	return
 }
 

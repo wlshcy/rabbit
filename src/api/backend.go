@@ -12,5 +12,6 @@ type Backend interface {
 	GetAddresses() ([]db.Address, error)
 	GetAddress(string) (*db.Address, error)
 	UpdateAddress(string, map[string]interface{}) error
+	DeleteAddress(string) error
 	NewAddress(*db.Address) error
 }
