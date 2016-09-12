@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log"
 
+	"github.com/wlshcy/rabbit/src/auth"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -197,4 +198,23 @@ func (mg *MongoDB) DeleteAddress(id string) error {
 	}
 
 	return nil
+}
+
+func (mg *MongoDB) Login(credential *Credential) (string, error) {
+	n, _ := mg.session.DB("").C("users").Find(bson.M{"phone": credential.Phone}).Count()
+	if n == 0 {
+		user := User{
+			Phone: credential.Phone,
+		}
+
+		if err := mg.session.DB("").C("users").Insert(&user); err != nil {
+			log.Printf("[ERROR] Insert user failed: %s", err)
+			return "", err
+		}
+	}
+
+	authBackend := auth.NewJWTAuthenticationBackend()
+	token, _ := authBackend.GenerateToken(credential.Phone)
+
+	return token, nil
 }

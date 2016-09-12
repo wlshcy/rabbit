@@ -5,6 +5,15 @@ import (
 )
 
 type (
+	User struct {
+		Phone string `json:"phone" bson:"phone"`
+	}
+
+	Credential struct {
+		Phone string `json:"phone" bson:"phone"`
+		Code  string `json:"code" bson:"code"`
+	}
+
 	Item struct {
 		Id    bson.ObjectId `json:"id" bson:"_id"`
 		Name  string        `json:"name" bson:"name"`

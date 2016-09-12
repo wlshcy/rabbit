@@ -30,6 +30,9 @@ func (r *Router) initRoutes() {
 
 	v1 := router.Group("/v1")
 	{
+		// login
+		v1.POST("/login", r.login)
+
 		// items
 		v1.GET("/items/:id", r.getItem)
 		v1.GET("/items", r.getItems)

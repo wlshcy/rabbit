@@ -5,6 +5,7 @@ import (
 )
 
 type Backend interface {
+	Login(*db.Credential) (string, error)
 	GetItem(string) (*db.Item, error)
 	GetItems(int, string) ([]db.Item, error)
 	GetOnSale(string) (*db.OnSale, error)
