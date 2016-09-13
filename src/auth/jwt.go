@@ -28,7 +28,7 @@ func NewJWTAuthenticationBackend() *JWTAuthenticationBackend {
 }
 
 func (backend *JWTAuthenticationBackend) GenerateToken(userId string) (string, error) {
-	token := jwt.New(jwt.SigningMethodHS256)
+	token := jwt.New(jwt.SigningMethodES512)
 	claims := token.Claims.(jwt.MapClaims)
 	claims["exp"] = time.Now().Add(time.Hour * time.Duration(backend.expDelta)).Unix()
 	claims["iat"] = time.Now().Unix()

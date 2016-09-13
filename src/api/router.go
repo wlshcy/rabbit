@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/wlshcy/rabbit/src/auth"
 )
 
 type Router struct {
@@ -28,30 +29,34 @@ func NewRouter(b Backend) *Router {
 func (r *Router) initRoutes() {
 	router := gin.Default()
 
-	v1 := router.Group("/v1")
+	authorized := router.Group("/v1")
+	authorized.Use(auth.JWTAuthMiddleware())
 	{
-		// login
-		v1.POST("/login", r.login)
-
-		// SMS
-		v1.POST("/sms/:phone", r.sendSMS)
-
-		// items
-		v1.GET("/items/:id", r.getItem)
-		v1.GET("/items", r.getItems)
-		v1.GET("/onsales/:id", r.getOnSale)
-		v1.GET("/onsales", r.getOnSales)
-
 		// orders
-		v1.GET("/orders", r.getOrders)
-		v1.POST("/orders", r.newOrder)
+		authorized.GET("/orders", r.getOrders)
+		authorized.POST("/orders", r.newOrder)
 
 		// address
-		v1.GET("/addresses", r.getAddresses)
-		v1.GET("/addresses/:id", r.getAddress)
-		v1.POST("/addresses", r.newAddress)
-		v1.DELETE("/addresses/:id", r.deleteAddress)
-		v1.POST("/addresses/:id", r.updateAddress)
+		authorized.GET("/addresses", r.getAddresses)
+		authorized.GET("/addresses/:id", r.getAddress)
+		authorized.POST("/addresses", r.newAddress)
+		authorized.DELETE("/addresses/:id", r.deleteAddress)
+		authorized.POST("/addresses/:id", r.updateAddress)
+	}
+
+	unauthorized := router.Group("/v1")
+	{
+		// login
+		unauthorized.POST("/login", r.login)
+
+		// SMS
+		unauthorized.POST("/sms/:phone", r.sendSMS)
+
+		// items
+		unauthorized.GET("/items/:id", r.getItem)
+		unauthorized.GET("/items", r.getItems)
+		unauthorized.GET("/onsales/:id", r.getOnSale)
+		unauthorized.GET("/onsales", r.getOnSales)
 	}
 
 	r.router = router
