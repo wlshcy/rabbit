@@ -33,6 +33,9 @@ func (r *Router) initRoutes() {
 		// login
 		v1.POST("/login", r.login)
 
+		// SMS
+		v1.POST("/sms/:phone", r.sendSMS)
+
 		// items
 		v1.GET("/items/:id", r.getItem)
 		v1.GET("/items", r.getItems)

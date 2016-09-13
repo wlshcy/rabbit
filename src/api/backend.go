@@ -15,4 +15,5 @@ type Backend interface {
 	UpdateAddress(string, map[string]interface{}) error
 	DeleteAddress(string) error
 	NewAddress(*db.Address) error
+	SendSMS(string) error
 }

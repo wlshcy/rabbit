@@ -3,6 +3,8 @@ package db
 import (
 	"errors"
 	"log"
+	"math/rand"
+	"time"
 
 	"github.com/wlshcy/rabbit/src/auth"
 	"gopkg.in/mgo.v2"
@@ -217,4 +219,38 @@ func (mg *MongoDB) Login(credential *Credential) (string, error) {
 	token, _ := authBackend.GenerateToken(credential.Phone)
 
 	return token, nil
+}
+
+func (mg *MongoDB) SendSMS(to string) error {
+	rand.Seed(time.Now().UTC().UnixNano())
+	const chars = "0123456789"
+	result := make([]byte, 6)
+	for i := 0; i < 6; i++ {
+		result[i] = chars[rand.Intn(len(chars))]
+	}
+	token := string(result)
+
+	if err := mg.session.DB("").C("token").Insert(bson.M{
+		"token": token,
+	}); err != nil {
+		log.Printf("[ERROR] Insert sms code failed: %s", err)
+		return err
+	}
+	//sessionTTL := mgo.Index{
+	//	Key:         []string{"created"},
+	//	Unique:      false,
+	//	DropDups:    false,
+	//	Background:  true,
+	//	ExpireAfter: time.Duration(60) * time.Second,
+	//}
+	//mg.session.DB("").C("token").EnsureIndex(sessionTTL)
+	go func() {
+		//ticker := time.NewTicker(time.Second * time.Duration(60))
+		//<-ticker.C
+		time.Sleep(time.Second * time.Duration(60))
+		mg.session.DB("").C("token").Remove(bson.M{"token": token})
+		//ticker.Stop()
+	}()
+
+	return nil
 }
