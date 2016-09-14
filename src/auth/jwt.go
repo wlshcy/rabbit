@@ -20,7 +20,7 @@ func NewJWTAuthenticationBackend() *JWTAuthenticationBackend {
 	}
 
 	authBackend := &JWTAuthenticationBackend{
-		signingKey: []byte("Flzx3000c"),
+		signingKey: []byte("Flzx3000cGrxchH6"),
 		expDelta:   72,
 	}
 
@@ -28,7 +28,7 @@ func NewJWTAuthenticationBackend() *JWTAuthenticationBackend {
 }
 
 func (backend *JWTAuthenticationBackend) GenerateToken(userId string) (string, error) {
-	token := jwt.New(jwt.SigningMethodES512)
+	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 	claims["exp"] = time.Now().Add(time.Hour * time.Duration(backend.expDelta)).Unix()
 	claims["iat"] = time.Now().Unix()

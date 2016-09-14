@@ -203,6 +203,13 @@ func (mg *MongoDB) DeleteAddress(id string) error {
 }
 
 func (mg *MongoDB) Login(credential *Credential) (string, error) {
+	authBackend := auth.NewJWTAuthenticationBackend()
+
+	token, err := authBackend.GenerateToken(credential.Phone)
+	if err != nil {
+		return "", err
+	}
+
 	n, _ := mg.session.DB("").C("users").Find(bson.M{"phone": credential.Phone}).Count()
 	if n == 0 {
 		user := User{
@@ -214,9 +221,6 @@ func (mg *MongoDB) Login(credential *Credential) (string, error) {
 			return "", err
 		}
 	}
-
-	authBackend := auth.NewJWTAuthenticationBackend()
-	token, _ := authBackend.GenerateToken(credential.Phone)
 
 	return token, nil
 }
