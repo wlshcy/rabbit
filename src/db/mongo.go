@@ -15,6 +15,10 @@ type MongoDB struct {
 	session *mgo.Session
 }
 
+const (
+	SMS_TTL = 60
+)
+
 func NewMongoDB(url string) *MongoDB {
 	s, err := mgo.Dial(url)
 
@@ -251,7 +255,7 @@ func (mg *MongoDB) SendSMS(to string) error {
 	go func() {
 		//ticker := time.NewTicker(time.Second * time.Duration(60))
 		//<-ticker.C
-		time.Sleep(time.Second * time.Duration(60))
+		time.Sleep(time.Second * time.Duration(SMS_TTL))
 		mg.session.DB("").C("sms").Remove(bson.M{"sms": sms})
 		//ticker.Stop()
 	}()
