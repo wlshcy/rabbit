@@ -2,15 +2,17 @@ package auth
 
 import (
 	"fmt"
+	"net/http"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 )
 
 func JWTAuthMiddleware() gin.HandlerFunc {
+	backend := NewJWTAuthenticationBackend()
 	return func(ctx *gin.Context) {
 		if len(ctx.Request.Header.Get("X-AUTH-TOKEN")) == 0 {
-			ctx.AbortWithStatus(401)
+			ctx.AbortWithStatus(http.StatusUnauthorized)
 		}
 		tokenString := ctx.Request.Header.Get("X-AUTH-TOKEN")
 
@@ -19,13 +21,13 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
 			}
-			return "Flzx3000c", nil
+			return backend.signingKey, nil
 		})
 
-		if err != nil || !token.Valid {
-			ctx.AbortWithStatus(401)
+		if err == nil && token.Valid {
+			ctx.Next()
+		} else {
+			ctx.AbortWithStatus(http.StatusUnauthorized)
 		}
-
-		ctx.Next()
 	}
 }

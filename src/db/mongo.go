@@ -232,10 +232,10 @@ func (mg *MongoDB) SendSMS(to string) error {
 	for i := 0; i < 6; i++ {
 		result[i] = chars[rand.Intn(len(chars))]
 	}
-	token := string(result)
+	sms := string(result)
 
-	if err := mg.session.DB("").C("token").Insert(bson.M{
-		"token": token,
+	if err := mg.session.DB("").C("sms").Insert(bson.M{
+		"sms": sms,
 	}); err != nil {
 		log.Printf("[ERROR] Insert sms code failed: %s", err)
 		return err
@@ -252,7 +252,7 @@ func (mg *MongoDB) SendSMS(to string) error {
 		//ticker := time.NewTicker(time.Second * time.Duration(60))
 		//<-ticker.C
 		time.Sleep(time.Second * time.Duration(60))
-		mg.session.DB("").C("token").Remove(bson.M{"token": token})
+		mg.session.DB("").C("sms").Remove(bson.M{"sms": sms})
 		//ticker.Stop()
 	}()
 
