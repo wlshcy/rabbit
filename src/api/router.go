@@ -59,12 +59,13 @@ func (r *Router) initRoutes() {
 		unauthorized.GET("/onsales", r.getOnSales)
 	}
 
-	web := router.Group("/admin")
+	web := router.Group("/v1/admin")
 	{
 		web.GET("/", r.adminHandler)
+		web.GET("/summaries", r.getSummaries)
 	}
 
-	//router.Static("/static", "./src/web/static")
+	router.Static("/static", "./src/web/static")
 
 	r.router = router
 }

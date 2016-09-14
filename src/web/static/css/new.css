@@ -1,0 +1,17 @@
+#page-wrapper {
+    margin-top: 100px;
+    margin-left: 100px;
+    margin-right: 100px;
+}
+
+.panel {
+    margin-bottom: 20px;
+    background-color: #FFF;
+    border: 0px;
+    border-radius: 4px;
+    box-shadow: none;
+}
+
+.panel > .table-bordered, .panel > .table-responsive > .table-bordered {
+    border: 1px solid #DDD;
+}
