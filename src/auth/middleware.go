@@ -25,6 +25,8 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 		})
 
 		if err == nil && token.Valid {
+			claims := token.Claims.(jwt.MapClaims)
+			ctx.Set("uid", claims["sub"])
 			ctx.Next()
 		} else {
 			ctx.AbortWithStatus(http.StatusUnauthorized)
