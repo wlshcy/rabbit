@@ -33,6 +33,7 @@ type (
 
 	Address struct {
 		Id      bson.ObjectId `json:"id" bson:"_id"`
+		Uid     string        `json:"uid" bson:"uid"`
 		Name    string        `json:"name" bson:"name"`
 		Mobile  string        `json:"mobile" bson:"mobile"`
 		Region  string        `json:"region" bson:"region"`

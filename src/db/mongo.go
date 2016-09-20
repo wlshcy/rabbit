@@ -136,10 +136,10 @@ func (mg *MongoDB) GetOnSale(id string) (*OnSale, error) {
 // 	return json.Marshal(order)
 // }
 //
-func (mg *MongoDB) GetAddresses() ([]Address, error) {
+func (mg *MongoDB) GetAddresses(uid string) ([]Address, error) {
 	addresses := []Address{}
 
-	if err := mg.session.DB("").C("addresses").Find(nil).Sort("_id").All(&addresses); err != nil {
+	if err := mg.session.DB("").C("addresses").Find(bson.M{"uid": uid}).Sort("_id").All(&addresses); err != nil {
 		log.Printf("[ERROR] Retrive addresses failed: %s", err)
 		return nil, err
 	}

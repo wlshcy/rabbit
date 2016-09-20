@@ -10,7 +10,14 @@ import (
 )
 
 func (r *Router) getAddresses(ctx *gin.Context) {
-	addresses, err := r.backend.GetAddresses()
+	uid, exists := ctx.Get("uid")
+	if !exists {
+		log.Printf("[ERROR] Retrive addresses faile: %s", "uid not in ctxt")
+		ctx.JSON(http.StatusUnauthorized, "no uid in ctx")
+		return
+	}
+
+	addresses, err := r.backend.GetAddresses(uid.(string))
 	if err != nil {
 		log.Printf("[ERROR] Retrieve addresses failed: %s", err)
 		ctx.JSON(http.StatusInternalServerError, err.Error())
@@ -21,15 +28,23 @@ func (r *Router) getAddresses(ctx *gin.Context) {
 }
 
 func (r *Router) newAddress(ctx *gin.Context) {
-	var address db.Address
+	uid, exists := ctx.Get("uid")
+	if !exists {
+		log.Printf("[ERROR] Retrive addresses faile: %s", "uid not in ctxt")
+		ctx.JSON(http.StatusUnauthorized, "no uid in ctx")
+		return
+	}
+
+	address := new(db.Address)
 
 	if err := ctx.BindJSON(&address); err != nil {
 		log.Printf("[ERROR] Bind json failed: %s", err)
 		ctx.JSON(http.StatusBadRequest, err.Error())
 		return
 	}
+	address.Uid = uid.(string)
 
-	if err := r.backend.NewAddress(&address); err != nil {
+	if err := r.backend.NewAddress(address); err != nil {
 		log.Printf("[ERROR] create address failed: %s", err)
 		ctx.JSON(http.StatusInternalServerError, err.Error())
 		return
