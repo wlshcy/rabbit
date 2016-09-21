@@ -94,19 +94,20 @@ func (mg *MongoDB) GetOnSale(id string) (*OnSale, error) {
 	return &onsale, nil
 }
 
-// func (mg *MongoDB) GetOrder(id string) (*types.Order, error) {
-// 	if !bson.IsObjectIdHex(id) {
-// 		return nil, errors.New("invalid id")
-// 	}
-//
-// 	order := types.Order{}
-//
-// 	if err := mg.session.DB().C("orders").FindId(bson.ObjectIdHex(id)).One(&order); err != nil {
-// 		return nil, err
-// 	}
-//
-// 	return order, nil
-// }
+func (mg *MongoDB) GetOrder(id string) (*Order, error) {
+	if !bson.IsObjectIdHex(id) {
+		return nil, errors.New("invalid id")
+	}
+
+	order := Order{}
+
+	if err := mg.session.DB("").C("orders").FindId(bson.ObjectIdHex(id)).One(&order); err != nil {
+		return nil, err
+	}
+
+	return &order, nil
+}
+
 //
 // func (mg *MongoDB) GetOrders(length, lastid) (*types.Order, error) {
 // 	if !bson.IsObjectIdHex(lastid) {
@@ -122,19 +123,16 @@ func (mg *MongoDB) GetOnSale(id string) (*OnSale, error) {
 // 	return orders, nil
 // }
 //
-// func (mg *MongoDB) NewOrder(body string) (string, error) {
-// 	order := types.Order{}
-//
-// 	json.NewDecoder(body).Decode(&order)
-//
-// 	order.Id = bson.NewObjectId()
-//
-// 	if err := mg.session.DB().C("orders").Insert(order); err != nil {
-// 		return nil, err
-// 	}
-//
-// 	return json.Marshal(order)
-// }
+func (mg *MongoDB) NewOrder(order *Order) error {
+	order.Id = bson.NewObjectId()
+
+	if err := mg.session.DB("").C("orders").Insert(order); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 //
 func (mg *MongoDB) GetAddresses(uid string) ([]Address, error) {
 	addresses := []Address{}

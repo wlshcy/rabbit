@@ -16,4 +16,6 @@ type Backend interface {
 	DeleteAddress(string) error
 	NewAddress(*db.Address) error
 	SendSMS(string) error
+	GetOrder(string) (*db.Order, error)
+	NewOrder(*db.Order) error
 }

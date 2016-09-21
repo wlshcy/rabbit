@@ -15,11 +15,13 @@ type (
 	}
 
 	Item struct {
-		Id    bson.ObjectId `json:"id" bson:"_id"`
-		Name  string        `json:"name" bson:"name"`
-		Image string        `json:"image" bson:"image"`
-		Price string        `json:"price" bson:"price"`
-		Size  string        `json:"size" bson:"size"`
+		Id     bson.ObjectId `json:"id" bson:"_id"`
+		Name   string        `json:"name" bson:"name"`
+		Image  string        `json:"image" bson:"image"`
+		Price  float64       `json:"price" bson:"price"`
+		Size   float64       `json:"size" bson:"size"`
+		Desc   string        `json:"desc" bson:"desc"`
+		Origin string        `json:"origin" bson:"origin"`
 	}
 
 	OnSale struct {
@@ -38,5 +40,25 @@ type (
 		Mobile  string        `json:"mobile" bson:"mobile"`
 		Region  string        `json:"region" bson:"region"`
 		Address string        `json:"address" bson:"address"`
+		Default bool          `json:"default" bson:"default"`
+	}
+
+	OrderItem struct {
+		Name  string `json:"name" bson:"name"`
+		Price string `json:"price" bson:"price"`
+		Count string `json:"count" bson:"count"`
+	}
+
+	Order struct {
+		Id      bson.ObjectId `json:"id" bson:"_id"`
+		Uid     string        `json:"uid" bson:"uid"`
+		Number  string        `json:"number" bson:"number"`
+		Items   []*OrderItem  `json:"items" bson:"items"`
+		Price   string        `json:"price" bson:"price"`
+		Freight string        `json:"freight" bson:"freight"`
+		Weight  string        `json:"weight" bson:"weight"`
+		Address string        `json:"address" bson:"address"`
+		Status  string        `json:"status" bson:"status"`
+		Created int64         `json:"created" bson:"created"`
 	}
 )

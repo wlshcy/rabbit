@@ -43,6 +43,7 @@ func (r *Router) newAddress(ctx *gin.Context) {
 		return
 	}
 	address.Uid = uid.(string)
+	address.Default = false
 
 	if err := r.backend.NewAddress(address); err != nil {
 		log.Printf("[ERROR] create address failed: %s", err)

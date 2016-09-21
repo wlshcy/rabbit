@@ -11,10 +11,11 @@ import (
 func JWTAuthMiddleware() gin.HandlerFunc {
 	backend := NewJWTAuthenticationBackend()
 	return func(ctx *gin.Context) {
-		if len(ctx.Request.Header.Get("X-AUTH-TOKEN")) == 0 {
+		if len(ctx.Request.Header.Get("X-Auth-Token")) == 0 {
 			ctx.AbortWithStatus(http.StatusUnauthorized)
 		}
-		tokenString := ctx.Request.Header.Get("X-AUTH-TOKEN")
+
+		tokenString := ctx.Request.Header.Get("X-Auth-Token")
 
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 			// Don't forget to validate the alg is what you expect:
