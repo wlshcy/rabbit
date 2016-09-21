@@ -42,6 +42,7 @@ func (r *Router) initRoutes() {
 		authorized.POST("/addresses", r.newAddress)
 		authorized.DELETE("/addresses/:id", r.deleteAddress)
 		authorized.POST("/addresses/:id", r.updateAddress)
+		authorized.POST("/addresses/:id/default", r.defaultAddress)
 	}
 
 	unauthorized := router.Group("/v1")

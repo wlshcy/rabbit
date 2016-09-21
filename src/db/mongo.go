@@ -142,6 +142,20 @@ func (mg *MongoDB) GetAddresses(uid string) ([]Address, error) {
 		return nil, err
 	}
 
+	//sortAddrs := []Address{}
+	//for _, address := range addresses {
+	//	if address.Default {
+	//		sortAddrs = append(sortAddrs, address)
+	//	}
+	//}
+
+	//for _, address := range addresses {
+	//	if !address.Default {
+	//		sortAddrs = append(sortAddrs, address)
+	//	}
+	//}
+
+	//return sortAddrs, nil
 	return addresses, nil
 }
 
@@ -199,6 +213,41 @@ func (mg *MongoDB) DeleteAddress(id string) error {
 	if err := mg.session.DB("").C("addresses").Remove(bson.M{"_id": bson.ObjectIdHex(id)}); err != nil {
 		log.Printf("[ERROR] Delete address %s failed: %s", id, err)
 		return err
+	}
+
+	return nil
+}
+
+func (mg *MongoDB) DefaultAddress(id, uid string) error {
+	if !bson.IsObjectIdHex(id) {
+		log.Printf("[ERROR] Invalid id %s", id)
+		return errors.New("invalid id")
+	}
+
+	addresses := []Address{}
+
+	if err := mg.session.DB("").C("addresses").Find(bson.M{"uid": uid}).Sort("_id").All(&addresses); err != nil {
+		log.Printf("[ERROR] Retrive addresses failed: %s", err)
+		return err
+	}
+
+	for _, address := range addresses {
+		if address.Id == bson.ObjectIdHex(id) {
+			query := bson.M{"_id": address.Id}
+			change := bson.M{"$set": bson.M{"default": true}}
+			if err := mg.session.DB("").C("addresses").Update(query, change); err != nil {
+				log.Printf("[ERROR] Set default address %s failed: %s", id, err)
+				return err
+			}
+		} else {
+			query := bson.M{"_id": address.Id}
+			change := bson.M{"$set": bson.M{"default": false}}
+			if err := mg.session.DB("").C("addresses").Update(query, change); err != nil {
+				log.Printf("[ERROR] Set default address %s failed: %s", id, err)
+				return err
+			}
+		}
+
 	}
 
 	return nil

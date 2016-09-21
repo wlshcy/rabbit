@@ -92,3 +92,20 @@ func (r *Router) updateAddress(ctx *gin.Context) {
 
 	return
 }
+
+func (r *Router) defaultAddress(ctx *gin.Context) {
+	uid, exists := ctx.Get("uid")
+	if !exists {
+		log.Printf("[ERROR] Retrive addresses faile: %s", "uid not in ctxt")
+		ctx.JSON(http.StatusUnauthorized, "no uid in ctx")
+		return
+	}
+
+	if err := r.backend.DefaultAddress(ctx.Param("id"), uid.(string)); err != nil {
+		log.Printf("[ERROR] Set default address failed: %s", err)
+		ctx.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	return
+}

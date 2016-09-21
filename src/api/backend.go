@@ -14,6 +14,7 @@ type Backend interface {
 	GetAddress(string) (*db.Address, error)
 	UpdateAddress(string, map[string]interface{}) error
 	DeleteAddress(string) error
+	DefaultAddress(string, string) error
 	NewAddress(*db.Address) error
 	SendSMS(string) error
 	GetOrder(string) (*db.Order, error)
