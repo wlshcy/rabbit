@@ -174,6 +174,12 @@ func (mg *MongoDB) GetAddress(id string) (*Address, error) {
 }
 
 func (mg *MongoDB) NewAddress(address *Address) error {
+
+	n, _ := mg.session.DB("").C("addresses").Find(bson.M{"uid": address.Uid}).Count()
+	if n >= 5 {
+		return nil
+	}
+
 	address.Id = bson.NewObjectId()
 
 	if err := mg.session.DB("").C("addresses").Insert(address); err != nil {
