@@ -31,6 +31,16 @@ func NewMongoDB(url string) *MongoDB {
 	}
 }
 
+func (mg *MongoDB) CreateItem(item *Item) error {
+	item.Id = bson.NewObjectId()
+
+	if err := mg.session.DB("").C("items").Insert(item); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (mg *MongoDB) GetItems(length int, lastid string) ([]Item, error) {
 	items := []Item{}
 
@@ -62,6 +72,31 @@ func (mg *MongoDB) GetItem(id string) (*Item, error) {
 	}
 
 	return &item, nil
+}
+
+func (mg *MongoDB) UpdateItem(item *Item) error {
+	query := bson.M{"_id": item.Id}
+	change := bson.M{"$set": item}
+	if err := mg.session.DB("").C("items").Update(query, change); err != nil {
+		log.Printf("[ERROR] Update item %s failed: %s", item.Id, err)
+		return err
+	}
+
+	return nil
+}
+
+func (mg *MongoDB) DeleteItem(id string) error {
+	if !bson.IsObjectIdHex(id) {
+		log.Printf("[ERROR] Invalid id %s", id)
+		return errors.New("invalid id")
+	}
+
+	if err := mg.session.DB("").C("items").Remove(bson.M{"_id": bson.ObjectIdHex(id)}); err != nil {
+		log.Printf("[ERROR] Delete item %s failed: %s", id, err)
+		return err
+	}
+
+	return nil
 }
 
 func (mg *MongoDB) GetOnSales() ([]OnSale, error) {

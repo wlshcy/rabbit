@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/wlshcy/rabbit/src/db"
 )
 
 func (r *Router) getItems(ctx *gin.Context) {
@@ -46,5 +47,40 @@ func (r *Router) getOnSale(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, onsale)
+	return
+}
+
+func (r *Router) createItem(ctx *gin.Context) {
+	var item db.Item
+	if err := ctx.BindJSON(&item); err != nil {
+		ctx.JSON(http.StatusInternalServerError, "")
+		return
+	}
+
+	r.backend.CreateItem(&item)
+
+	return
+}
+
+func (r *Router) updateItem(ctx *gin.Context) {
+	var item db.Item
+	if err := ctx.BindJSON(&item); err != nil {
+		ctx.JSON(http.StatusInternalServerError, "")
+		return
+	}
+
+	r.backend.UpdateItem(&item)
+
+	return
+}
+
+func (r *Router) deleteItem(ctx *gin.Context) {
+	err := r.backend.DeleteItem(ctx.Param("id"))
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, "delete item failed")
+	} else {
+		ctx.JSON(http.StatusOK, "")
+	}
+
 	return
 }

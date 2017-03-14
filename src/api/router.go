@@ -56,6 +56,10 @@ func (r *Router) initRoutes() {
 		// items
 		unauthorized.GET("/items/:id", r.getItem)
 		unauthorized.GET("/items", r.getItems)
+		unauthorized.POST("/items", r.createItem)
+		unauthorized.PATCH("/items/:id", r.updateItem)
+		unauthorized.DELETE("/items/:id", r.deleteItem)
+
 		unauthorized.GET("/onsales/:id", r.getOnSale)
 		unauthorized.GET("/onsales", r.getOnSales)
 	}
