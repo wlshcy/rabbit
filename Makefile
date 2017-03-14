@@ -18,3 +18,9 @@ rel: fmt
 # http://golang.org/cmd/go/#hdr-Run_gofmt_on_package_sources
 fmt:
 	go fmt ./src/...
+
+push: image
+	docker push wlsh/rabbit:latest
+
+image:
+	docker build -t wlsh/rabbit:latest .
