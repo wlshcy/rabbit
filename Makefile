@@ -7,20 +7,17 @@ export GO15VENDOREXPERIMENT=1
 # GOPATH := ${PWD}/vendor:${GOPATH}
 # export GOPATH
 
-default: build
+default: darwin 
 
-build: fmt
-	go build -v -o ./bin/rabbit ./src/
+darwin: fmt
+	GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 go build -v -o ./bin/rabbit ./src/
 
-rel: fmt
-        GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -v -o ./rel/rabbit./src/
+linux: fmt
+	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -v -o ./bin/rabbit ./src/
 
 # http://golang.org/cmd/go/#hdr-Run_gofmt_on_package_sources
 fmt:
 	go fmt ./src/...
-
-push: image
-	docker push wlsh/rabbit:latest
 
 image:
 	docker build -t wlsh/rabbit:latest .
