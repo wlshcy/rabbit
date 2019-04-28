@@ -1,0 +1,22 @@
+# github.com/dgrijalva/jwt-go v0.0.0-20160831183534-24c63f56522a
+github.com/dgrijalva/jwt-go
+# github.com/gin-gonic/gin v1.1.4
+github.com/gin-gonic/gin
+github.com/gin-gonic/gin/binding
+github.com/gin-gonic/gin/render
+# github.com/golang/protobuf v1.3.0
+github.com/golang/protobuf/proto
+# github.com/manucorporat/sse v0.0.0-20160126180136-ee05b128a739
+github.com/manucorporat/sse
+# github.com/mattn/go-isatty v0.0.0-20170216235908-dda3de49cbfc
+github.com/mattn/go-isatty
+# gopkg.in/go-playground/validator.v8 v8.18.2
+gopkg.in/go-playground/validator.v8
+# gopkg.in/mgo.v2 v2.0.0-20160818020120-3f83fa500528
+gopkg.in/mgo.v2
+gopkg.in/mgo.v2/bson
+gopkg.in/mgo.v2/internal/sasl
+gopkg.in/mgo.v2/internal/scram
+gopkg.in/mgo.v2/internal/json
+# gopkg.in/yaml.v2 v2.2.2
+gopkg.in/yaml.v2

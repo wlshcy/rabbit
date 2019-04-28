@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	addr  = flag.String("addr", "0.0.0.0:8888", "address")
+	addr  = flag.String("addr", "0.0.0.0:8889", "address")
 	mongo = flag.String("mongo", "mongodb://localhost/bluebox", "mongo server addr")
 )
 
